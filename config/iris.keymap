@@ -6,58 +6,153 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
 
 / {
+    combos {
+        compatible = "zmk,combos";
+
+        df_tab_combo {
+            bindings = <&kp TAB>;
+            key-positions = <28 27>;
+        };
+
+        we_escape_combo {
+            bindings = <&kp ESCAPE>;
+            key-positions = <15 14>;
+        };
+
+        jk_enter_combo {
+            bindings = <&kp ENTER>;
+            key-positions = <31 32>;
+        };
+    };
+
+    macros {
+        paren_macro: paren_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp LEFT_ARROW>;
+            label = "PAREN_MACRO";
+        };
+
+        sq_brkt_macro: new_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT_ARROW>;
+            label = "NEW_MACRO";
+        };
+
+        curly_brcs_macro: curly_brcs_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACE &kp RIGHT_BRACE &kp LEFT_ARROW>;
+            label = "CURLY_BRCS_MACRO";
+        };
+
+        s_quote_macro: s_quote_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp SQT &kp SQT &kp LEFT_ARROW>;
+            label = "S_QUOTE_MACRO";
+        };
+
+        d_quot_macro: d_quot_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DOUBLE_QUOTES &kp DOUBLE_QUOTES &kp LEFT_ARROW>;
+            label = "D_QUOT_MACRO";
+        };
+
+        ang_brkt_macro: ang_brkt_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LESS_THAN &kp GREATER_THAN &kp LEFT_ARROW>;
+            label = "ANG_BRKT_MACRO";
+        };
+    };
+
+    behaviors {
+        sqt_alt_grave: sqt_alt_grave {
+            compatible = "zmk,behavior-mod-morph";
+            label = "SQT_ALT_GRAVE";
+            bindings = <&kp SINGLE_QUOTE>, <&kp GRAVE>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LALT)>;
+        };
+
+        ques_shift_excla: ques_shift_excla {
+            compatible = "zmk,behavior-mod-morph";
+            label = "QUES_SHIFT_EXCLA";
+            bindings = <&kp QUESTION>, <&kp EXCLAMATION>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        com_shft_semi: com_shft_semi {
+            compatible = "zmk,behavior-mod-morph";
+            label = "COM_SHFT_SEMI";
+            bindings = <&kp COMMA>, <&kp SEMICOLON>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        dot_shft_colon: dot_shft_colon {
+            compatible = "zmk,behavior-mod-morph";
+            label = "DOT_SHFT_COLON";
+            bindings = <&kp PERIOD>, <&kp COLON>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
-// ------------------------------------------------------------------------------------------------------------
-// |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   `   |
-// |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   -   |
-// |  CTRL |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
-// | SHIFT |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   /   | SHIFT |
-//                            | GUI  | LOWER|  SPACE |  | ENTER | RAISE|  ALT  |
+        qwerty_layer {
+            // ------------------------------------------------------------------------------------------------------------
+            // |  ESC  |  1  |  2  |  3   |  4   |  5   |                   |  6   |  7    |  8    |  9   |   0   |   `   |
+            // |  TAB  |  Q  |  W  |  E   |  R   |  T   |                   |  Y   |  U    |  I    |  O   |   P   |   -   |
+            // |  CTRL |  A  |  S  |  D   |  F   |  G   |                   |  H   |  J    |  K    |  L   |   ;   |   '   |
+            // | SHIFT |  Z  |  X  |  C   |  V   |  B   |   "["  |  |  "]"  |  N   |  M    |  ,    |  .   |   /   | SHIFT |
+            //                            | GUI  | LOWER|  SPACE |  | ENTER | RAISE|  ALT  |
+
             bindings = <
-&kp ESC   &kp N1 &kp N2 &kp N3 &kp N4   &kp N5                      &kp N6 &kp N7 &kp N8    &kp N9  &kp N0   &kp GRAVE
-&kp TAB   &kp Q  &kp W  &kp E  &kp R    &kp T                       &kp Y  &kp U  &kp I     &kp O   &kp P    &kp MINUS
-&kp LCTRL &kp A  &kp S  &kp D  &kp F    &kp G                       &kp H  &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-&kp LSHFT &kp Z  &kp X  &kp C  &kp V    &kp B   &kp LBKT  &kp RBKT  &kp N  &kp M  &kp COMMA &kp DOT &kp FSLH &kp RSHFT
-                               &kp LGUI &mo 1   &kp SPACE &kp RET   &mo 2  &kp RALT
+&none  &kp N1  &kp N2          &kp N3            &kp N4              &kp N5                       &kp N6     &kp N7              &kp N8            &kp N9           &kp N0             &none
+&none  &kp Q   &kp W           &kp E             &kp R               &kp T                        &kp Y      &kp U               &kp I             &kp O            &kp P              &none
+&none  &kp A   &mt LEFT_ALT S  &mt LEFT_SHIFT D  &mt LEFT_CONTROL F  &kp G                        &kp H      &mt LEFT_CONTROL J  &mt LEFT_SHIFT K  &mt LEFT_ALT L   &sqt_alt_grave     &none
+&none  &kp Z   &kp X           &kp C             &kp V               &kp B          &none  &none  &kp N      &kp M               &com_shft_semi    &dot_shft_colon  &ques_shift_excla  &none
+                                                 &none               &kp BACKSPACE  &mo 1  &mo 2  &kp SPACE  &none
             >;
+
+            label = "QWERTY";
         };
 
-        lower_layer {
-// ------------------------------------------------------------------------------------------------------------
-// | BTCLR | BT1 | BT2 |  BT3 |  BT4 |  BT5 |                   |      |       |       |      |       |       |
-// |  F1   |  F2 |  F3 |  F4  |  F5  |  F6  |                   |  F7  |  F8   |  F9   |  F10 |  F11  |  F12  |
-// |   `   |  !  |  @  |  #   |  $   |  %   |                   |  ^   |  &    |  *    |  (   |   )   |   ~   |
-// |       |     |     |      |      |      |        |  |       |      |  _    |  +    |  {   |   }   |  "|"  |
-//                            |      |      |        |  |       |      |       |
+        num_sym {
             bindings = <
-&bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4                &trans    &trans    &trans    &trans    &trans    &trans
-&kp F1     &kp F2       &kp F3       &kp F4       &kp F5       &kp F6                      &kp F7    &kp F8    &kp F9    &kp F10   &kp F11   &kp F12
-&kp GRAVE  &kp EXCL     &kp AT       &kp HASH     &kp DOLLAR   &kp PRCNT                   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR  &kp RPAR  &kp TILDE
-&trans     &trans       &trans       &trans       &trans       &trans    &trans   &trans   &trans    &kp MINUS &kp PLUS  &kp LBRC  &kp RBRC  &kp PIPE
-                                                  &trans       &trans    &trans   &trans   &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &trans          &trans           &trans           &trans     &trans         &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &kp TILDE       &kp KP_N7        &kp KP_N8        &kp KP_N9  &kp PIPE       &trans
+&trans  &trans  &trans  &trans  &trans  &trans                  &kp MINUS       &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_N6  &kp SLASH      &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp UNDERSCORE  &kp KP_N1        &kp KP_N2        &kp KP_N3  &kp BACKSLASH  &trans
+                                &trans  &trans  &trans  &trans  &trans          &kp KP_N0
             >;
+
+            label = "Numbers / Symbols";
         };
 
-        raise_layer {
-// ------------------------------------------------------------------------------------------------------------
-// |       |     |     |      |      |      |                   |      |       |       |      |       |       |
-// |   `   |  1  |  2  |  3   |  4   |  5   |                   |  6   |   7   |   8   |  9   |   0   |       |
-// |   F1  |  F2 |  F3 |  F4  |  F5  |  F6  |                   |      |   <-  |   ^   |  v   |  ->   |       |
-// |   F7  |  F8 |  F9 |  F10 |  F11 |  F12 |        |  |       |  +   |   -   |   =   |  [   |   ]   |   \   |
-//                            |      |      |        |  |       |      |       |
+        nav_brcs {
             bindings = <
-&trans    &trans &trans &trans  &trans  &trans                       &trans      &trans    &trans    &trans   &trans    &trans
-&kp GRAVE &kp N1 &kp N2 &kp N3  &kp N4  &kp N5                       &kp N6      &kp N7    &kp N8    &kp N9   &kp N0    &trans
-&kp F1    &kp F2 &kp F3 &kp F4  &kp F5  &kp F6                       &trans      &kp LEFT  &kp DOWN  &kp UP   &kp RIGHT &trans
-&kp F7    &kp F8 &kp F9 &kp F10 &kp F11 &kp F12   &trans   &trans    &kp KP_PLUS &kp MINUS &kp EQUAL &kp LBKT &kp RBKT  &kp BSLH
-                                &trans  &trans    &trans   &trans    &trans      &trans
+&trans  &trans  &trans             &trans             &trans                 &trans                            &trans          &trans          &trans        &trans           &trans  &trans
+&trans  &trans  &curly_brcs_macro  &sq_brkt_macro     &paren_macro           &ang_brkt_macro                   &kp HOME        &kp PAGE_DOWN   &kp PAGE_UP   &kp END          &trans  &trans
+&trans  &trans  &kp LEFT_BRACE     &kp LEFT_BRACKET   &kp LEFT_PARENTHESIS   &kp LESS_THAN                     &kp LEFT_ARROW  &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT_ARROW  &trans  &trans
+&trans  &trans  &kp RIGHT_BRACE    &kp RIGHT_BRACKET  &kp RIGHT_PARENTHESIS  &kp GREATER_THAN  &trans  &trans  &trans          &trans          &trans        &trans           &trans  &trans
+                                                      &trans                 &trans            &trans  &trans  &trans          &trans
             >;
+
+            label = "Navigation / Braces";
         };
     };
 };
