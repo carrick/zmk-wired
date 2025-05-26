@@ -26,8 +26,8 @@ include:
   - board: adafruit_kb2040
     shield: settings_reset
   - board: seeeduino_xiao_ble
-    shield: dilshod_1984x_left
+    shield: 1984x_left
   - board: seeeduino_xiao_ble
-    shield: dilshod_1984x_right
+    shield: 1984x_right
   - board: seeeduino_xiao_ble
     shield: settings_reset

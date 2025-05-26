@@ -1,0 +1,401 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
+
+#define DEFAULT 0
+#define NUM     1
+#define NAV     2
+#define APP     3
+#define SYSTEM  4
+
+&caps_word { continue-list = <UNDERSCORE MINUS BACKSPACE DELETE>; };
+
+&mt { quick-tap-ms = <200>; };
+
+#define str(x) #x
+#define SPACE_NUM(num) \
+  space_num_##num: space_num_##num { \
+    compatible = "zmk,behavior-macro"; \
+    \#binding-cells = <0>; \
+    bindings = <&macro_tap &kp SPACE &kp N##num>; \
+  };
+#define TMUX_NUM(num) \
+  tmux_num_##num: tmux_num_##num { \
+    compatible = "zmk,behavior-macro"; \
+    \#binding-cells = <0>; \
+    bindings = <&macro_press &kp LCTRL> \
+             , <&macro_tap &kp S> \
+             , <&macro_release &kp LCTRL> \
+             , <&macro_tap &kp N##num>; \
+  };
+
+/ {
+    macros {
+        SPACE_NUM(0)
+    SPACE_NUM(1)
+    SPACE_NUM(2)
+    SPACE_NUM(3)
+    SPACE_NUM(4)
+    SPACE_NUM(5)
+    SPACE_NUM(6)
+    SPACE_NUM(7)
+    SPACE_NUM(8)
+    SPACE_NUM(9)
+
+    TMUX_NUM(0)
+    TMUX_NUM(1)
+    TMUX_NUM(2)
+    TMUX_NUM(3)
+    TMUX_NUM(4)
+    TMUX_NUM(5)
+    TMUX_NUM(6)
+    TMUX_NUM(7)
+    TMUX_NUM(8)
+    TMUX_NUM(9)
+
+        parens: parens {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp LEFT>;
+            label = "PARENS";
+        };
+
+        ang_bkts: ang_bkts {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LESS_THAN &kp GREATER_THAN &kp LEFT>;
+            label = "ANG_BKTS";
+        };
+
+        sq_bkts: sq_bkts {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT>;
+            label = "SQ_BKTS";
+        };
+
+        crly_brcs: crly_brcs {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_BRACE &kp RIGHT_BRACE &kp LEFT>;
+            label = "CRLY_BRCS";
+        };
+
+        s_quot: s_quot {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp SQT &kp SQT &kp LEFT>;
+            label = "S_QUOT";
+        };
+
+        d_quot: d_quot {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DOUBLE_QUOTES &kp DOUBLE_QUOTES &kp LEFT>;
+            label = "D_QUOT";
+        };
+
+        vind_gui: vind_gui {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp ESCAPE &kp LEFT>,
+                <&macro_release>,
+                <&kp ESCAPE &kp LEFT>;
+
+            label = "VIND_GUI";
+        };
+
+        vind_edit: vind_edit {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp ESCAPE &kp RIGHT>,
+                <&macro_release>,
+                <&kp ESCAPE &kp RIGHT>;
+
+            label = "VIND_EDIT";
+        };
+
+        vind_off: vind_off {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press>,
+                <&kp ESCAPE &kp DOWN>,
+                <&macro_release>,
+                <&kp ESCAPE &kp DOWN>;
+
+            label = "VIND_OFF";
+        };
+    };
+
+    conditional_layers { compatible = "zmk,conditional-layers"; };
+
+    behaviors {
+        vol_up: vol_up {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp C_VOL_UP>, <&kp C_BRI_UP>;
+
+            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT|MOD_LALT|MOD_RALT)>;
+        };
+
+        vol_dn: vol_dn {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp C_VOL_DN>, <&kp C_BRI_DN>;
+
+            mods = <(MOD_LGUI|MOD_LSFT|MOD_RGUI|MOD_RSFT|MOD_LALT|MOD_RALT)>;
+        };
+
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <250>;
+            quick-tap-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        sftent: sftent {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <150>;
+            quick-tap-ms = <75>;
+            flavor = "hold-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        hmt: homerow_mods_no_quicktap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <75>;
+            require-prior-idle-ms = <50>;
+            flavor = "hold-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        lhp: layer_hold_prefered {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <150>;
+            flavor = "hold-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+
+        nav_caps: nav_caps {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&mo NAV>, <&caps_word>, <&kp CAPS>;
+        };
+
+        ques_bang: ques_bang {
+            compatible = "zmk,behavior-mod-morph";
+            label = "QUES_BANG";
+            bindings = <&kp QUESTION>, <&kp EXCLAMATION>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        comma_semicolon: comma_semicolon {
+            compatible = "zmk,behavior-mod-morph";
+            label = "COMMA_SEMICOLON";
+            bindings = <&kp COMMA>, <&kp SEMI>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        dot_colon: dot_colon {
+            compatible = "zmk,behavior-mod-morph";
+            label = "DOT_COLON";
+            bindings = <&kp PERIOD>, <&kp COLON>;
+
+            #binding-cells = <0>;
+            mods = <(MOD_LSFT)>;
+        };
+
+        vind_td: vind_td {
+            compatible = "zmk,behavior-tap-dance";
+            label = "VIND_TD";
+            #binding-cells = <0>;
+            bindings = <&vind_off>, <&vind_edit>, <&vind_gui>;
+        };
+    };
+
+    /*combos {
+    compatible = "zmk,combos";
+
+    #define COMBO(NAME, BINDINGS, KEYPOS, LAYERS) \
+      combo_##NAME { \
+        bindings = <BINDINGS>; \
+        key-positions = <KEYPOS>; \
+        layers = <LAYERS>; \
+      };
+
+    //  ╭─────────────────────╮          ╭─────────────────────╮
+    //  │   0   1   2   3   4 │          │  5   6   7   8  10  │
+    //  │  11  12  13  14  15 │          │ 15  16  17  18  19  │
+    //  │  20  21  22  23  24 ╰───╮  ╭───╯ 25  26  27  28  29  │
+    //  ╰────────────╮ 30  31  32 │  │ 33  34  35 ╭────────────╯
+    //               ╰────────────╯  ╰────────────╯
+
+    // COMBO(caps_word, &caps_word, 30 33, DEFAULT)
+  };*/
+
+    combos {
+        compatible = "zmk,combos";
+
+        capsword {
+            bindings = <&caps_word>;
+            key-positions = <12 17>;
+        };
+
+        clear_bt {
+            bindings = <&bt BT_CLR_ALL>;
+            key-positions = <0 20>;
+        };
+
+        tab {
+            bindings = <&kp TAB>;
+            key-positions = <13 12>;
+        };
+
+        enter {
+            bindings = <&kp ENTER>;
+            key-positions = <16 17>;
+        };
+
+        esc {
+            bindings = <&kp ESCAPE>;
+            key-positions = <11 12>;
+        };
+
+        gui {
+            bindings = <&kp LEFT_GUI>;
+            key-positions = <17 18>;
+        };
+
+        cut {
+            bindings = <&kp LC(X)>;
+            key-positions = <20 21>;
+        };
+
+        copy {
+            bindings = <&kp LC(C)>;
+            key-positions = <21 22>;
+        };
+
+        paste {
+            bindings = <&kp LC(V)>;
+            key-positions = <22 23>;
+        };
+
+        undo {
+            bindings = <&kp LC(Z)>;
+            key-positions = <3 2>;
+        };
+
+        redo1 {
+            bindings = <&kp LC(LS(Z))>;
+            key-positions = <1 2>;
+        };
+
+        redo2 {
+            bindings = <&kp LC(R)>;
+            key-positions = <0 1>;
+        };
+
+        grave {
+            bindings = <&kp GRAVE>;
+            key-positions = <23 12>;
+        };
+
+        capslock {
+            bindings = <&kp CAPSLOCK>;
+            key-positions = <18 11>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+&kp Q  &kp W       &kp E        &kp R        &kp T          &kp Y      &kp U        &kp I             &kp O       &kp P
+&kp A  &hm LALT S  &hm LSHFT D  &hm LCTRL F  &kp G          &kp H      &hm LCTRL J  &hm LSHFT K       &hm LALT L  &kp SQT
+&kp Z  &kp X       &kp C        &kp V        &kp B          &kp N      &kp M        &comma_semicolon  &dot_colon  &ques_bang
+                   &vind_td     &lt 1 DEL    &kp BACKSPACE  &kp SPACE  &mo 2        &none
+            >;
+
+            label = "QWERTY";
+        };
+
+        num_sym_layer {
+            bindings = <
+&none  &none  &kp AT_SIGN    &kp PERCENT   &kp CARET  &kp TILDE       &kp N7        &kp N8  &kp N9        &kp PIPE
+&none  &none  &kp DOLLAR     &kp ASTERISK  &kp PLUS   &kp MINUS       &kp NUMBER_4  &kp N5  &kp NUMBER_6  &kp SLASH
+&none  &none  &kp AMPERSAND  &kp HASH      &kp EQUAL  &kp UNDERSCORE  &kp N1        &kp N2  &kp N3        &kp BACKSLASH
+              &trans         &trans        &trans     &trans          &kp NUMBER_0  &trans
+            >;
+
+            label = "Numbers and Symbols";
+        };
+
+        nav_layer {
+            bindings = <
+&none  &crly_brcs       &sq_bkts           &parens                &ang_bkts         &kp HOME   &kp PAGE_DOWN   &kp PG_UP     &kp END     &kp PRINTSCREEN
+&none  &kp LEFT_BRACE   &kp LEFT_BRACKET   &kp LEFT_PARENTHESIS   &kp LESS_THAN     &kp LEFT   &kp DOWN        &kp UP        &kp RIGHT   &s_quot
+&none  &kp RIGHT_BRACE  &kp RIGHT_BRACKET  &kp RIGHT_PARENTHESIS  &kp GREATER_THAN  &vind_gui  &msc SCRL_DOWN  &msc SCRL_UP  &vind_edit  &d_quot
+                        &trans             &trans                 &trans            &trans     &trans          &trans
+            >;
+
+            label = "Navigation and Braces";
+        };
+
+        vim_layer {
+            bindings = <
+&none  &none  &none   &none   &none   &none   &none   &none   &none  &none
+&none  &none  &none   &none   &none   &none   &none   &none   &none  &none
+&none  &none  &none   &none   &none   &none   &none   &none   &none  &none
+              &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+
+            label = "Vim";
+        };
+
+        vim_alt {
+            bindings = <
+&bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2  &bt BT_SEL 3   &bt BT_SEL 4   &none  &none     &none  &none  &ext_power EP_ON
+&bt BT_DISC 0  &bt BT_DISC 1  &kp END       &bt BT_DISC 3  &bt BT_DISC 4  &none  &none     &none  &none  &ext_power EP_OFF
+&none          &none          &none         &none          &bt BT_CLR     &none  &none     &none  &none  &none
+                              &trans        &none          &none          &none  &kp HOME  &none
+            >;
+
+            label = "Vim Alternate";
+        };
+
+        emty_layer {
+            bindings = <
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+&none  &none  &none  &none  &none  &none  &none  &none  &none  &none
+              &none  &none  &none  &none  &none  &none
+            >;
+        };
+    };
+};
